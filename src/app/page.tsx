@@ -58,27 +58,16 @@ const structuredData = {
   ]
 };
 
-const ScrollButton = ({ onScroll }: { onScroll: () => void }) => {
-  return (
-    <button
-      onClick={onScroll}
-      className="lg:hidden fixed left-1/2 bottom-6 -translate-x-1/2 w-12 h-12 bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/20 transition-colors"
-      aria-label="Scroll to Projects"
-    >
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-  );
-};
-
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const totalSlides = 4; // skinCAM, Grabify, Motion2Recon, VORTEX
 
   useEffect(() => {
-    if (showContent) {
+    // Check if we're on mobile
+    const isMobile = window.innerWidth < 1024; // lg breakpoint in Tailwind is 1024px
+
+    if (showContent && isMobile) {
       setTimeout(() => {
         document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -86,7 +75,13 @@ export default function Home() {
   }, [showContent]);
 
   const handleScroll = () => {
-    setShowContent(true);
+    // Always scroll to content section, regardless of current state
+    document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
+
+    // Only set showContent to true if it's not already true
+    if (!showContent) {
+      setShowContent(true);
+    }
   };
 
   const nextSlide = () => {
@@ -171,6 +166,19 @@ export default function Home() {
                   </svg>
                 </a>
               </div>
+
+              {/* Mobile Scroll Button - Only visible on mobile */}
+              <div className="mt-8 lg:hidden">
+                <button
+                  onClick={handleScroll}
+                  className="w-12 h-12 mx-auto bg-black/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/20 transition-colors"
+                  aria-label="View Projects"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -198,7 +206,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-                <div className="flex-1 text-center text-sm text-gray-600 font-medium">🚀 Projects & Research</div>
+                <div className="flex-1 text-center text-sm text-gray-600 font-medium">🚀 Past Work</div>
               </div>
               <div className="p-4 lg:p-6 bg-white">
                 <div className="relative">
@@ -300,9 +308,9 @@ export default function Home() {
                           </div>
                           <div>
                             <h3 className="text-lg font-semibold">Grabify <span className="text-purple-500">🌐</span></h3>
-                            <p className="text-sm text-gray-600 mt-1"><span className="font-bold">700,000+</span> monthly active users</p>
+                            <p className="text-sm text-gray-600 mt-1">Smart IP logging for all</p>
                             <ul className="list-disc ml-4 mt-2 text-sm">
-                              <li>Smart IP logging links, featured on MTV&apos;s Catfish TV show</li>
+                              <li>Grabify allows users to create smart IP logging links, and has over <span className="font-bold">700,000+</span> monthly active users.</li>
                               <li>Grabify links have over <span className="font-bold">350M+</span> uses to date!</li>
                             </ul>
                           </div>
@@ -380,8 +388,8 @@ export default function Home() {
                       <h3 className="text-lg font-semibold">California Institute of Technology</h3>
                       <span className="text-xs">September 2020 - June 2024</span>
                     </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-medium">Bachelor of Science, Computer Science (Machine Learning Track</span>
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+                      <span className="text-sm font-medium mb-1 sm:mb-0">Bachelor of Science, Computer Science (Machine Learning Track)</span>
                       <span className="text-xs">GPA: 4.1/4.0</span>
                     </div>
                   </div>
@@ -391,9 +399,8 @@ export default function Home() {
                       <h3 className="text-lg font-semibold">DoorDash <span className="text-red-500">🏃‍♂️</span></h3>
                       <span className="text-xs">September 2024 - Present</span>
                     </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red-700">Software Engineer</span>
-                      <span className="text-xs">Sunnyvale, CA</span>
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red-700 mb-1 sm:mb-0 w-fit">Software Engineer</span>
                     </div>
                     <ul className="list-disc ml-4 space-y-1 text-sm">
                       <li>Building an experimentation platform in Kotlin that enables DoorDash engineers to run experiments and manage feature flags.</li>
@@ -407,9 +414,8 @@ export default function Home() {
                       <h3 className="text-lg font-semibold">DoorDash <span className="text-red-500">🏃‍♂️</span></h3>
                       <span className="text-xs">June 2023 - September 2023</span>
                     </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red-700">Software Engineer Intern</span>
-                      <span className="text-xs">San Francisco, CA</span>
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red-700 mb-1 sm:mb-0 w-fit">Software Engineer Intern</span>
                     </div>
                     <ul className="list-disc ml-4 space-y-1 text-sm">
                       <li>Developed a collaboration tool for engineers to discuss and track experiments across DoorDash&apos;s dev tools.</li>
@@ -422,12 +428,11 @@ export default function Home() {
                       <h3 className="text-lg font-semibold">DoorDash <span className="text-red-500">🏃‍♂️</span></h3>
                       <span className="text-xs">June 2022 - September 2022</span>
                     </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1 sm:mb-0">
                         <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red-700">Software Engineer Intern</span>
                         <span className="text-sm font-medium px-3 py-1 rounded-full bg-black/10 text-black">KPCB Engineering Fellow</span>
                       </div>
-                      <span className="text-xs">San Francisco, CA</span>
                     </div>
                     <ul className="list-disc ml-4 space-y-1 text-sm">
                       <li>Developed a Kafka library (part of the Asgard suite) using Kotlin, Guice, and Resilience4j.</li>
@@ -441,9 +446,8 @@ export default function Home() {
                       <h3 className="text-lg font-semibold">Stanford University <span className="text-red-600">🎯</span></h3>
                       <span className="text-xs">June 2021 - August 2021</span>
                     </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-purple-50 text-purple-700">ML Research Intern @ MRSRL</span>
-                      <span className="text-xs">Stanford, CA</span>
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+                      <span className="text-sm font-medium px-3 py-1 rounded-full bg-purple-50 text-purple-700 mb-1 sm:mb-0 w-fit">ML Research Intern @ MRSRL</span>
                     </div>
                     <ul className="list-disc ml-4 space-y-1 text-sm">
                       <li>Implemented Motion2Recon using PyTorch, numpy, and signal processing for MR reconstruction.</li>
@@ -455,7 +459,6 @@ export default function Home() {
             </section>
           </div>
         </div>
-        <ScrollButton onScroll={handleScroll} />
       </main>
     </>
   );
